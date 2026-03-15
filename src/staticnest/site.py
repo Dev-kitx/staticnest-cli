@@ -409,7 +409,8 @@ def find_nav_trail(node: NavNode, target_url: str, trail: list[NavNode] | None =
 
 def render_breadcrumbs_html(nav_tree: NavNode, page: Page) -> str:
     trail = find_nav_trail(nav_tree, page.url) or []
-    crumbs = ['<a href="/">Documentation</a>']
+    root_url = next((node.url for node in trail if node.url), "/")
+    crumbs = [f'<a href="{root_url}">Documentation</a>']
     visible_nodes = [node for node in trail[1:] if node.title != page.title]
     for node in visible_nodes:
         crumbs.append('<span class="breadcrumb-sep">›</span>')
