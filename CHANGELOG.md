@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.5](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.4...v0.1.5) (2026-03-15)
+
+
+### Bug Fixes
+
+* Add base_url parameter to build_url function ([#13](https://github.com/Dev-kitx/staticnest-cli/issues/13)) ([b344224](https://github.com/Dev-kitx/staticnest-cli/commit/b34422455715b72027e5f225a37f878a02c5b351))
+* Update breadcrumbs HTML generation for root URL ([#15](https://github.com/Dev-kitx/staticnest-cli/issues/15)) ([06ecb13](https://github.com/Dev-kitx/staticnest-cli/commit/06ecb1354f7f45d56e6a8ac09a9141ff9014faae))
+
 ## [0.1.4](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.3...v0.1.4) (2026-03-15)
 
 
