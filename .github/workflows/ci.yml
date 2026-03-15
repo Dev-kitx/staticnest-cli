@@ -34,7 +34,7 @@ jobs:
         env:
           SETUPTOOLS_SCM_PRETEND_VERSION: "0.0.0"
         run: |
-          pip install -e ".[dev]" || pip install -e . pytest pytest-cov
+          pip install -e . pytest pytest-cov
 
       - name: Run tests with coverage
         env:
