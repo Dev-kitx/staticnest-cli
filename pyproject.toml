@@ -3,7 +3,7 @@ requires = ["setuptools>=80", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "staticnest"
+name = "staticnest-cli"
 dynamic = ["version"]
 description = "A custom Python static site generator for polished documentation websites."
 readme = "README.md"
