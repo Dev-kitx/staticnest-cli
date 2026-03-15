@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.3...v0.1.4) (2026-03-15)
+
+
+### Bug Fixes
+
+* Rename project from staticnest to staticnest-cli ([#11](https://github.com/Dev-kitx/staticnest-cli/issues/11)) ([308ef6d](https://github.com/Dev-kitx/staticnest-cli/commit/308ef6d849c11c8df3b7fcb12d7e5b58fba0703e))
+
 ## [0.1.3](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.2...v0.1.3) (2026-03-15)
 
 
