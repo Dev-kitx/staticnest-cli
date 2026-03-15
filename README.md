@@ -21,7 +21,7 @@
 This repository now contains two separate things:
 
 - the `staticnest` package itself
-- an example site in [examples/docs-site](/Users/akashbasa/Documents/python-static-website-generator/examples/docs-site)
+- an example site in [examples/docs-site](/examples/docs-site)
 
 ## Project layout
 
@@ -102,7 +102,7 @@ pip install -e .
 staticnest build --config examples/docs-site/site.toml
 ```
 
-The example site's generated output is written to [examples/docs-site/dist](/Users/akashbasa/Documents/python-static-website-generator/examples/docs-site/dist).
+The example site's generated output is written to [examples/docs-site/dist](/examples/docs-site/dist).
 
 ## Author content
 
@@ -110,7 +110,7 @@ Create `.md` files inside `content/`. The first `# Heading` becomes the page tit
 
 ## Navigation
 
-Sidebar navigation comes from [navigation.yml](/Users/akashbasa/Documents/python-static-website-generator/examples/docs-site/navigation.yml), not from the file tree.
+Sidebar navigation comes from [navigation.yml](/examples/docs-site/navigation.yml), not from the file tree.
 
 ```yaml
 - title: Overview
