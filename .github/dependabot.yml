@@ -1,0 +1,44 @@
+version: 2
+
+updates:
+  # ── GitHub Actions ─────────────────────────────────────────────────────────
+  # Keeps action versions pinned in workflow files up to date.
+  # e.g.  actions/checkout@v4  →  actions/checkout@v5
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "UTC"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      # Update all actions in a single PR instead of one PR per action
+      github-actions:
+        patterns: ["*"]
+
+  # ── Python dependencies ────────────────────────────────────────────────────
+  # Keeps packages declared in pyproject.toml up to date.
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "UTC"
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - dependencies
+      - python
+    # Open a maximum of 5 PRs at once to avoid noise
+    open-pull-requests-limit: 5
+    groups:
+      # Group all dev/test dependencies into one PR
+      dev-dependencies:
+        dependency-type: development
+        patterns: ["*"]

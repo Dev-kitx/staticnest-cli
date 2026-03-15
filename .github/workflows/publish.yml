@@ -1,0 +1,145 @@
+name: Publish to PyPI
+
+# Triggered automatically when a GitHub Release is published.
+# The release tag (e.g. "1.2.3") becomes the package version via setuptools-scm.
+#
+# ROLLBACK / REVERT STRATEGY
+# ───────────────────────────
+# PyPI does not allow re-uploading or deleting a released version.
+# The correct options are:
+#
+#   1. YANK  (preferred for bugs)
+#      Run the "Yank Release" workflow. Yank marks a version as bad so that
+#      `pip install staticnest` skips it, but pinned installs still resolve it.
+#      Users see a deprecation warning. Reversible — you can un-yank later.
+#
+#   2. PATCH RELEASE  (preferred for critical fixes)
+#      Fix the bug, cut a new patch release (e.g. 1.2.1), and publish that.
+#      Optionally also yank the bad version.
+#
+# SETUP REQUIRED (one-time, per environment)
+# ──────────────────────────────────────────
+# This workflow uses PyPI Trusted Publishing (OIDC) — no API tokens needed.
+# Configure it at https://pypi.org/manage/account/publishing/ and
+# https://test.pypi.org/manage/account/publishing/ by adding:
+#   publisher: GitHub Actions
+#   owner:      <your-github-username>
+#   repository: <repo-name>
+#   workflow:   publish.yml
+#   environment: pypi   (or testpypi for TestPyPI)
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Publish target"
+        required: true
+        default: testpypi
+        type: choice
+        options: [testpypi, pypi]
+
+jobs:
+  # ── 1. Run the full test suite before we ever touch PyPI ──────────────────
+  test:
+    name: Tests (pre-publish gate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed for setuptools-scm to read the tag
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install & test
+        run: |
+          pip install -e . pytest pytest-cov
+          python -m pytest tests/ --tb=short -q
+
+  # ── 2. Build the distribution artefacts ───────────────────────────────────
+  build:
+    name: Build distribution
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
+
+      - name: Inspect built artefacts
+        run: ls -lh dist/
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  # ── 3a. Publish to TestPyPI first (staging) ────────────────────────────────
+  publish-testpypi:
+    name: Publish → TestPyPI (staging)
+    needs: build
+    runs-on: ubuntu-latest
+    # Run on every release and on manual dispatch targeting testpypi
+    if: >
+      github.event_name == 'release' ||
+      (github.event_name == 'workflow_dispatch' && inputs.target == 'testpypi')
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/staticnest
+    permissions:
+      id-token: write   # required for OIDC Trusted Publishing
+
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://upload.test.pypi.org/legacy/
+
+  # ── 3b. Publish to real PyPI (production) ─────────────────────────────────
+  publish-pypi:
+    name: Publish → PyPI (production)
+    needs: publish-testpypi
+    runs-on: ubuntu-latest
+    # Only publish to real PyPI when a release is published (not manual dispatch
+    # to testpypi). Manual dispatch can target pypi explicitly.
+    if: >
+      github.event_name == 'release' ||
+      (github.event_name == 'workflow_dispatch' && inputs.target == 'pypi')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/staticnest
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -1,0 +1,47 @@
+name: Release Please
+
+# Release Please watches commits pushed to main.
+# It maintains a "Release PR" that:
+#   - bumps the version in pyproject.toml (or tracks it via tags)
+#   - auto-generates a CHANGELOG from conventional commit messages
+#
+# When you merge the Release PR:
+#   - Release Please creates the git tag and GitHub Release
+#   - That "release published" event triggers publish.yml automatically
+#
+# CONVENTIONAL COMMITS (determines version bump)
+# ───────────────────────────────────────────────
+#   feat: ...          → minor bump  (1.1.0 → 1.2.0)
+#   fix: ...           → patch bump  (1.1.0 → 1.1.1)
+#   feat!: ...         → major bump  (1.1.0 → 2.0.0)
+#   BREAKING CHANGE:   → major bump
+#   chore/docs/style   → no release PR update
+#
+# SETUP REQUIRED (one-time)
+# ──────────────────────────
+# No secrets needed — uses GITHUB_TOKEN which is provided automatically.
+# Optionally enable "Allow GitHub Actions to create and approve pull requests"
+# in Settings → Actions → General → Workflow permissions.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write        # create tags and releases
+  pull-requests: write   # open/update the Release PR
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

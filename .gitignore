@@ -1,0 +1,9 @@
+dist/
+examples/docs-site/dist/
+__pycache__/
+*.pyc
+.DS_Store
+staticnest.egg-info/
+tests/__pycache__/
+.history/**
+.coverage

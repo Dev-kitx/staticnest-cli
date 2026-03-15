@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description_text }}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ current_url }}assets/site.css" />
+    {{ custom_css_tag }}
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-actions">
+        <button class="menu-toggle" type="button" data-menu-toggle>Menu</button>
+        <a class="brand" href="{{ current_url }}">
+          <span class="brand-mark">N</span>
+          <span>{{ brand_name }}</span>
+        </a>
+      </div>
+      <div class="search-shell">
+        <span>Search</span>
+        <input type="search" placeholder="Find pages and sections..." data-search-input />
+      </div>
+      <a class="top-link" href="{{ github_url }}">GitHub</a>
+    </header>
+    <main class="layout">
+      <aside class="sidebar" data-sidebar>
+        <div class="sidebar-header">
+          <p class="sidebar-title">Documentation</p>
+          <p class="sidebar-tagline">{{ tagline }}</p>
+        </div>
+        <nav class="nav-tree">{{ nav_html }}</nav>
+      </aside>
+      <section class="content-shell">
+        <div class="hero">
+          <span class="eyebrow">Theme override</span>
+          <h1>{{ page_title }}</h1>
+          <p class="lead">{{ description_text }}</p>
+          <div class="search-results" data-search-results></div>
+        </div>
+        <article class="article-shell">
+          {{ article_html }}
+        </article>
+      </section>
+      <aside class="toc">
+        <p class="toc-title">On this page</p>
+        <nav class="toc-list">{{ toc_html }}</nav>
+      </aside>
+    </main>
+    <script id="search-index" type="application/json">{{ search_json }}</script>
+    <script>{{ base_js }}</script>
+    {{ custom_js_tag }}
+    {{ live_reload_tag }}
+  </body>
+</html>

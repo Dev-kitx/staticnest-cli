@@ -1,0 +1,78 @@
+name: Yank Release (Rollback)
+
+# Use this workflow to yank a bad PyPI release.
+#
+# Yanking marks a specific version as "bad" so that:
+#   - `pip install staticnest`         → skips the yanked version
+#   - `pip install staticnest==X.Y.Z`  → still installs it (with a warning)
+#
+# Yanking is REVERSIBLE — you can un-yank from the PyPI release page if needed.
+# It is the recommended rollback mechanism before a patch release is ready.
+#
+# Un-yanking: go to https://pypi.org/manage/project/staticnest/releases/,
+# expand the version, and click "Un-yank".
+#
+# REQUIRED SECRET
+# ───────────────
+# Add a PyPI API token (scoped to the `staticnest` project) as a repository
+# secret named PYPI_API_TOKEN in Settings → Secrets and variables → Actions.
+# This workflow uses a token (not OIDC) because the PyPI yank endpoint does
+# not yet support Trusted Publishing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to yank (e.g. 1.2.0)"
+        required: true
+        type: string
+      reason:
+        description: "Short reason shown to pip users (optional)"
+        required: false
+        default: "This release has a critical bug. Please upgrade."
+        type: string
+      target:
+        description: "Registry to yank from"
+        required: true
+        default: pypi
+        type: choice
+        options: [pypi, testpypi]
+
+jobs:
+  yank:
+    name: Yank ${{ inputs.version }} from ${{ inputs.target }}
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.target }}
+
+    steps:
+      - name: Install twine
+        run: pip install twine
+
+      - name: Yank release via twine
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          REPO_URL="https://upload.pypi.org/legacy/"
+          if [ "${{ inputs.target }}" = "testpypi" ]; then
+            REPO_URL="https://upload.test.pypi.org/legacy/"
+          fi
+
+          twine yank \
+            --repository-url "$REPO_URL" \
+            --reason "${{ inputs.reason }}" \
+            staticnest==${{ inputs.version }}
+
+      - name: Summary
+        run: |
+          echo "### Yanked staticnest==${{ inputs.version }} from ${{ inputs.target }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Reason:** ${{ inputs.reason }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To un-yank, visit the release page and click **Un-yank**." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Next steps:" >> $GITHUB_STEP_SUMMARY
+          echo "- Fix the issue on a branch" >> $GITHUB_STEP_SUMMARY
+          echo "- Bump the patch version (git tag X.Y.Z+1)" >> $GITHUB_STEP_SUMMARY
+          echo "- Push the tag to trigger a new release" >> $GITHUB_STEP_SUMMARY

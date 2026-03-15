@@ -1,0 +1,27 @@
+- title: Overview
+  page: index.md
+- title: Guides
+  items:
+    - page: docs/getting-started.md
+    - page: docs/configuration.md
+    - page: docs/authoring.md
+    - page: docs/deployment.md
+    - title: Customization
+      page: docs/customization/index.md
+      items:
+        - page: docs/customization/theme-overrides.md
+- navigation-bar:
+    github:
+      title: GitHub
+      link: https://github.com/akashbasa/python-static-website-generator
+      logo: https://github.githubassets.com/favicons/favicon.svg
+    resources:
+      title: Resources
+      items:
+        - name: Getting Started
+          link: /docs/getting-started/
+        - name: Configuration
+          link: /docs/configuration/
+- issues:
+    title: Issues
+    link: https://github.com/akashbasa/python-static-website-generator/issues

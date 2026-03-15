@@ -1,0 +1,19 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -12% -35% auto;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22), transparent 65%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  letter-spacing: 0.04em;
+}
