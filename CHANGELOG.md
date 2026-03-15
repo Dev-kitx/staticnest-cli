@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.5...v0.1.6) (2026-03-15)
+
+
+### Bug Fixes
+
+* Enhance LiveReloadHandler with base_path support ([#16](https://github.com/Dev-kitx/staticnest-cli/issues/16)) ([72a1b68](https://github.com/Dev-kitx/staticnest-cli/commit/72a1b6833a9a635e2170035d990e4103a2dc2a08))
+
 ## [0.1.5](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.4...v0.1.5) (2026-03-15)
 
 
