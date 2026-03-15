@@ -12,8 +12,9 @@ from staticnest.site import BuildWatcher
 
 
 class LiveReloadHandler(SimpleHTTPRequestHandler):
-    def __init__(self, *args, directory: str, watcher: BuildWatcher, **kwargs) -> None:
+    def __init__(self, *args, directory: str, watcher: BuildWatcher, base_path: str = "/", **kwargs) -> None:
         self.watcher = watcher
+        self.base_path = base_path.rstrip("/") or "/"
         super().__init__(*args, directory=directory, **kwargs)
 
     def do_GET(self) -> None:
@@ -26,6 +27,11 @@ class LiveReloadHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(payload)
             return
+        # Strip the base_url prefix so /my-repo/docs/page/ → /docs/page/
+        if self.base_path != "/" and self.path.startswith(self.base_path):
+            self.path = self.path[len(self.base_path):] or "/"
+            if not self.path.startswith("/"):
+                self.path = "/" + self.path
         super().do_GET()
 
     def send_error(
@@ -64,6 +70,7 @@ def watch_loop(watcher: BuildWatcher, stop_event: threading.Event) -> None:
 def serve_site(config_path: Path, host: str, port: int) -> None:
     watcher = BuildWatcher(config_path)
     result = watcher.rebuild()
+    base_path = result.config.base_url.rstrip("/") or "/"
     stop_event = threading.Event()
     watcher_thread = threading.Thread(target=watch_loop, args=(watcher, stop_event), daemon=True)
     watcher_thread.start()
@@ -72,10 +79,12 @@ def serve_site(config_path: Path, host: str, port: int) -> None:
         LiveReloadHandler,
         directory=str(result.config.output_dir),
         watcher=watcher,
+        base_path=base_path,
     )
     server = ThreadingHTTPServer((host, port), handler)
 
-    print(f"Serving {result.config.output_dir} at http://{host}:{port}")
+    url = f"http://{host}:{port}{base_path}/"
+    print(f"Serving {result.config.output_dir} at {url}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
