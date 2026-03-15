@@ -87,7 +87,7 @@ code, pre {
 .brand-label {
   display: inline-block;
   font-size: 1rem;
-  background: linear-gradient(120deg, #ff7e5f 0%, #feb47b 50%, #ff7e5f 100%);
+  background: linear-gradient(120deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 60%, white) 50%, var(--accent) 100%);
   background-size: 200% auto;
   background-position: right center;
   color: transparent;
