@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.1...v0.1.2) (2026-03-15)
+
+
+### Bug Fixes
+
+* Change build command to use pyproject-build ([#7](https://github.com/Dev-kitx/staticnest-cli/issues/7)) ([0799ceb](https://github.com/Dev-kitx/staticnest-cli/commit/0799cebddebcee3a2058f2809147d0cb6efa646d))
+
 ## [0.1.1](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.0...v0.1.1) (2026-03-15)
 
 
