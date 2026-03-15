@@ -85,7 +85,7 @@ jobs:
         run: ls -lh dist/
 
       - name: Upload dist artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
