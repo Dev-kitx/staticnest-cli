@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.2...v0.1.3) (2026-03-15)
+
+
+### Bug Fixes
+
+* Update publish workflow to remove TestPyPI steps ([#9](https://github.com/Dev-kitx/staticnest-cli/issues/9)) ([58a36dd](https://github.com/Dev-kitx/staticnest-cli/commit/58a36ddc743fb1a79c48abcaae8e74d54b5a5a47))
+
 ## [0.1.2](https://github.com/Dev-kitx/staticnest-cli/compare/v0.1.1...v0.1.2) (2026-03-15)
 
 
