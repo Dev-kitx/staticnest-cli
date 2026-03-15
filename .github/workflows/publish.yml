@@ -79,7 +79,7 @@ jobs:
       - name: Build sdist and wheel
         run: |
           pip install build
-          python -m build
+          pyproject-build
 
       - name: Inspect built artefacts
         run: ls -lh dist/
