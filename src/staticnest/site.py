@@ -138,13 +138,15 @@ def iter_markdown_files(content_dir: Path) -> list[Path]:
     return sorted(content_dir.rglob("*.md"))
 
 
-def build_url(relative_path: Path) -> str:
+def build_url(relative_path: Path, base_url: str = "/") -> str:
+    prefix = "/" + base_url.strip("/")
+    prefix = prefix.rstrip("/")
     if relative_path.name == "index.md":
         if relative_path.parent == Path("."):
-            return "/"
-        return f"/{relative_path.parent.as_posix()}/"
+            return prefix + "/"
+        return f"{prefix}/{relative_path.parent.as_posix()}/"
     stem = relative_path.with_suffix("")
-    return f"/{stem.as_posix()}/"
+    return f"{prefix}/{stem.as_posix()}/"
 
 
 def default_title_from_path(relative_path: Path) -> str:
@@ -179,7 +181,7 @@ def load_pages(config: SiteConfig) -> list[Page]:
             Page(
                 source_path=source_path,
                 relative_path=relative_path,
-                url=build_url(relative_path),
+                url=build_url(relative_path, config.base_url),
                 title=title,
                 nav_title=str(metadata.get("nav_title") or title),
                 summary=str(metadata.get("summary") or rendered.summary or config.description),
